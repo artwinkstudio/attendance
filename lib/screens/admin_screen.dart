@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class SelectionScreen extends StatelessWidget {
-  const SelectionScreen({super.key});
+class AdminScreen extends StatelessWidget {
+  const AdminScreen({super.key});
 
-  static String id = '/SelectionScreen';
+  static String id = '/AdminScreen';
 
   @override
   Widget build(BuildContext context) {
