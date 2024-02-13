@@ -32,7 +32,7 @@ class _AdminScreenState extends State<AdminScreen> {
   List<Map<String, dynamic>> _students = [];
   DateTime _selectedDate = DateTime.now();
   bool _isPresent = true;
-  String _className = '';
+  String? _selectedClassName;
 
   @override
   void initState() {
@@ -173,36 +173,36 @@ class _AdminScreenState extends State<AdminScreen> {
     }
   }
 
-Future<void> _addAttendance() async {
-  if (_formKeyAttendance.currentState!.validate()) {
-    try {
-      await FirebaseFirestore.instance.collection('attendance').add({
-        'studentId': _selectedStudentId,
-        'parentId': _selectedParentId,  // Assuming you have this from the student selection
-        'attendanceDate': Timestamp.fromDate(_selectedDate), // Now includes both date and time
-        'attendance': _isPresent,
-        'className': _className,
-      });
+  Future<void> _addAttendance() async {
+    if (_formKeyAttendance.currentState!.validate()) {
+      try {
+        await FirebaseFirestore.instance.collection('attendance').add({
+          'studentId': _selectedStudentId,
+          'parentId': _selectedParentId,
+          'attendanceDate': Timestamp.fromDate(_selectedDate),
+          'attendance': _isPresent,
+          'className': _selectedClassName,
+        });
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Attendance recorded successfully")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Attendance recorded successfully")));
 
-      // Reset the form and state after successful submission
-      _formKeyAttendance.currentState?.reset(); // Reset the form fields
-      setState(() {
-        // Reset your custom state variables to their initial values
-        _selectedDate = DateTime.now(); // Reset to current date, or another default
-        _isPresent = true; // Reset to default attendance value
-        _className = ''; // Clear the class name
-        _selectedStudentId = null; // Clear the selected student
-        _selectedParentId = null; // Optionally clear the selected parent, if needed
-      });
-
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error recording attendance: $e")));
+        // Reset the form and state after successful submission
+        _formKeyAttendance.currentState?.reset();
+        setState(() {
+          // Reset your custom state variables to their initial values
+          _selectedDate = DateTime.now(); // Reset to current date
+          _isPresent = true; // Reset to default attendance value
+          _selectedStudentId = null; // Clear the selected student
+          _selectedParentId = null; // Clear the selected parent
+          _selectedClassName = null; // Reset the selected class name
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error recording attendance: $e")));
+      }
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -300,22 +300,52 @@ Future<void> _addAttendance() async {
                   children: [
                     DropdownButtonFormField<String>(
                       value: _selectedStudentId,
-                      onChanged: (String? newValue) {
+                      onChanged: (String? newValue) async {
                         setState(() {
                           _selectedStudentId = newValue;
                         });
+                        if (newValue != null) {
+                          final DocumentSnapshot studentDoc =
+                              await FirebaseFirestore.instance
+                                  .collection('students')
+                                  .doc(newValue)
+                                  .get();
+                          final studentData =
+                              studentDoc.data() as Map<String, dynamic>;
+                          final String? parentId = studentData['parentId'];
+
+                          // Update the parent dropdown to reflect the selected student's parent
+                          // But allow the admin to change it if needed
+                          setState(() {
+                            _selectedParentId = parentId;
+                          });
+                        }
                       },
                       items: _students.map((student) {
                         return DropdownMenuItem<String>(
-                          value: student['id'], // Use the separately stored ID
-                          child: Text(student['data']
-                              .studentName), // Display the student name
+                          value: student['id'],
+                          child: Text(student['data'].studentName),
                         );
                       }).toList(),
                       decoration:
                           InputDecoration(labelText: 'Select a Student'),
                       validator: (value) =>
                           value == null ? 'Please select a student' : null,
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: _selectedParentId,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedParentId = newValue;
+                        });
+                      },
+                      items: _parents.map((parent) {
+                        return DropdownMenuItem<String>(
+                          value: parent['id'],
+                          child: Text(parent['data'].parentName),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(labelText: 'Select a Parent'),
                     ),
                     // Date Picker Button
                     Row(
@@ -358,20 +388,37 @@ Future<void> _addAttendance() async {
                       },
                     ),
                     // Class Name TextField
-                    TextFormField(
+                    DropdownButtonFormField<String>(
+                      value: _selectedClassName,
                       decoration: InputDecoration(labelText: 'Class Name'),
-                      onChanged: (value) => _className = value,
-                      validator: (value) =>
-                          value!.isEmpty ? 'Please enter a class name' : null,
-                    ),
-                    // Submit Button
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKeyAttendance.currentState!.validate()) {
-                          _addAttendance();
-                        }
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedClassName = newValue;
+                        });
                       },
-                      child: Text('Record Attendance'),
+                      items: <String>[
+                        'Traditional Art Class',
+                        'Digital Art Class'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      validator: (value) =>
+                          value == null ? 'Please select a class name' : null,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Call the method to add attendance when the button is pressed
+                          if (_formKeyAttendance.currentState!.validate()) {
+                            _addAttendance();
+                          }
+                        },
+                        child: Text('Record Attendance'),
+                      ),
                     ),
                   ],
                 ),

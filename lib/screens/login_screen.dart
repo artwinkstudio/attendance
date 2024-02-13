@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
       if (mounted) {
-        Navigator.pushReplacementNamed(context, SelectionScreen.id);
+        Navigator.pushNamed(context, SelectionScreen.id);
       }
     } on FirebaseAuthException catch (e) {
       print(e.code);
