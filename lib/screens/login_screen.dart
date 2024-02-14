@@ -2,8 +2,10 @@ import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/screens/admin_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
+import 'package:attendance/utils/snackbar_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _snackbarUtil = SnackbarUtil();
 
   @override
   void dispose() {
@@ -29,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
 
     if (emailAddress.isEmpty || password.isEmpty) {
-      _showSnackBar('Email or password cannot be empty.');
+      _snackbarUtil.showSnackbar(context, 'Email or password cannot be empty.');
       return;
     }
 
@@ -55,15 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
         errorMessage = 'Wrong password provided for that user.';
         break;
     }
-    _showSnackBar(errorMessage);
+    _snackbarUtil.showSnackbar(context, errorMessage);
   }
 
-  void _showSnackBar(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: const Duration(seconds: 5)),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
