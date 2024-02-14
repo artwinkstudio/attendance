@@ -45,7 +45,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Attendance Records'),
+        title: const Text('Attendance Records'),
         backgroundColor: kAppBarBackgroundColor,
       ),
       backgroundColor: kBackgroundColor,
@@ -54,9 +54,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         builder: (BuildContext context,
             AsyncSnapshot<List<AttendanceModel>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error fetching attendance records"));
+            return const Center(child: Text("Error fetching attendance records"));
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             // Sort the attendance records by date in descending order
             List<AttendanceModel> attendanceRecords = snapshot.data!;
@@ -79,7 +79,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                       leading: CircleAvatar(
                         backgroundColor: kAppBarBackgroundColor,
                         child: Text('${index + 1}',
-                            style: TextStyle(color: Colors.black)), // Display index count
+                            style: const TextStyle(color: Colors.black)), // Display index count
                       ),
                       title: Text(record.className),
                       subtitle: Text(
@@ -90,7 +90,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               },
             );
           } else {
-            return Center(child: Text("No attendance records found"));
+            return const Center(child: Text("No attendance records found"));
           }
         },
       ),

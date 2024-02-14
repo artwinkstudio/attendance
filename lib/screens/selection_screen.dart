@@ -60,7 +60,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Students'),
+        title: const Text('Your Students'),
         backgroundColor: kAppBarBackgroundColor, // Example color
       ),
       backgroundColor: kBackgroundColor,
@@ -71,9 +71,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
               future: fetchCurrentUser(currentUserUid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Loading...", style: TextStyle(fontSize: 20)),
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child:  Text("Loading...", style: TextStyle(fontSize: 20)),
                   );
                 } else if (snapshot.hasData) {
                   UserModel? user = snapshot.data;
@@ -81,12 +81,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                         'Hi ${user!.parentName}, please select:',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold)),
                   );
                 } else {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text("Error or no user found"),
                   );
                 }
@@ -98,7 +98,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     .then((user) => fetchStudents(user!.studentIDs)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasData) {
                     List<MapEntry<String, StudentModel>> studentsWithIds =
                         snapshot.data!;
@@ -134,7 +134,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       },
                     );
                   } else {
-                    return Center(
+                    return const Center(
                         child: Text("No students found or error occurred"));
                   }
                 },

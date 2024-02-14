@@ -94,8 +94,10 @@ class _AdminScreenState extends State<AdminScreen> {
           'parentName': _parentName,
           'studentIDs': [],
         });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("User created successfully")));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("User created successfully")));
+        }
 
         // Clear the form fields (if necessary) and reset the form
         _email = '';
@@ -107,8 +109,10 @@ class _AdminScreenState extends State<AdminScreen> {
         // Refetch the parents to update the dropdown
         await _fetchParents();
       } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error creating user: $e")));
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Error creating user: $e")));
+        }
       }
     }
   }
@@ -134,9 +138,11 @@ class _AdminScreenState extends State<AdminScreen> {
         await parentRef.update({
           'studentIDs': FieldValue.arrayUnion([newStudentId]),
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Student created and added to parent successfully")));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content:
+                  Text("Student created and added to parent successfully")));
+        }
 
         // Optionally, clear the form fields and update UI as needed
         _studentName = '';
@@ -148,8 +154,10 @@ class _AdminScreenState extends State<AdminScreen> {
         // Refetch the parents to update the dropdown
         await _fetchStudents();
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error creating student: $e")));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error creating student: $e")));
+        }
       }
     }
   }
@@ -183,9 +191,10 @@ class _AdminScreenState extends State<AdminScreen> {
           'attendance': _isPresent,
           'className': _selectedClassName,
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Attendance recorded successfully")));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Attendance recorded successfully")));
+        }
 
         // Reset the form and state after successful submission
         _formKeyAttendance.currentState?.reset();
@@ -198,8 +207,10 @@ class _AdminScreenState extends State<AdminScreen> {
           _selectedClassName = null; // Reset the selected class name
         });
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error recording attendance: $e")));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error recording attendance: $e")));
+        }
       }
     }
   }
@@ -208,7 +219,7 @@ class _AdminScreenState extends State<AdminScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Screen'),
+        title: const Text('Admin Screen'),
         backgroundColor: kAppBarBackgroundColor,
       ),
       backgroundColor: kBackgroundColor,
@@ -223,27 +234,28 @@ class _AdminScreenState extends State<AdminScreen> {
                 child: Column(
                   children: [
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Email'),
+                      decoration: const InputDecoration(labelText: 'Email'),
                       onChanged: (value) => _email = value,
                       validator: (value) =>
                           value!.isEmpty ? 'Please enter an email' : null,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Password'),
+                      decoration: const InputDecoration(labelText: 'Password'),
                       obscureText: true,
                       onChanged: (value) => _password = value,
                       validator: (value) =>
                           value!.isEmpty ? 'Please enter a password' : null,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Parent Name'),
+                      decoration:
+                          const InputDecoration(labelText: 'Parent Name'),
                       onChanged: (value) => _parentName = value,
                       validator: (value) =>
                           value!.isEmpty ? 'Please enter a parent name' : null,
                     ),
                     ElevatedButton(
                       onPressed: _createUserWithEmailAndPassword,
-                      child: Text('Create User'),
+                      child: const Text('Create User'),
                     ),
                   ],
                 ),
@@ -257,14 +269,15 @@ class _AdminScreenState extends State<AdminScreen> {
                 child: Column(
                   children: [
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Student Name'),
+                      decoration:
+                          const InputDecoration(labelText: 'Student Name'),
                       onChanged: (value) => _studentName = value,
                       validator: (value) =>
                           value!.isEmpty ? 'Please enter a student name' : null,
                     ),
                     TextFormField(
                       decoration:
-                          InputDecoration(labelText: 'Remaining Classes'),
+                          const InputDecoration(labelText: 'Remaining Classes'),
                       onChanged: (value) =>
                           _remainingClasses = int.tryParse(value) ?? 0,
                       validator: (value) => value!.isEmpty
@@ -284,11 +297,11 @@ class _AdminScreenState extends State<AdminScreen> {
                           child: Text(parent['data'].parentName),
                         );
                       }).toList(),
-                      hint: Text('Select a Parent'),
+                      hint: const Text('Select a Parent'),
                     ),
                     ElevatedButton(
                       onPressed: _createStudent,
-                      child: Text('Create Student'),
+                      child: const Text('Create Student'),
                     ),
                   ],
                 ),
@@ -328,7 +341,7 @@ class _AdminScreenState extends State<AdminScreen> {
                         );
                       }).toList(),
                       decoration:
-                          InputDecoration(labelText: 'Select a Student'),
+                          const InputDecoration(labelText: 'Select a Student'),
                       validator: (value) =>
                           value == null ? 'Please select a student' : null,
                     ),
@@ -345,7 +358,8 @@ class _AdminScreenState extends State<AdminScreen> {
                           child: Text(parent['data'].parentName),
                         );
                       }).toList(),
-                      decoration: InputDecoration(labelText: 'Select a Parent'),
+                      decoration:
+                          const InputDecoration(labelText: 'Select a Parent'),
                     ),
                     // Date Picker Button
                     Row(
@@ -367,7 +381,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           child: Text(
                               "Select date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}"),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () => _selectTime(context),
                           child: Text(
@@ -379,7 +393,7 @@ class _AdminScreenState extends State<AdminScreen> {
                     // Attendance Status Toggle
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Present'),
+                      title: const Text('Present'),
                       value: _isPresent,
                       onChanged: (bool value) {
                         setState(() {
@@ -390,7 +404,8 @@ class _AdminScreenState extends State<AdminScreen> {
                     // Class Name TextField
                     DropdownButtonFormField<String>(
                       value: _selectedClassName,
-                      decoration: InputDecoration(labelText: 'Class Name'),
+                      decoration:
+                          const InputDecoration(labelText: 'Class Name'),
                       onChanged: (String? newValue) {
                         setState(() {
                           _selectedClassName = newValue;
@@ -417,7 +432,7 @@ class _AdminScreenState extends State<AdminScreen> {
                             _addAttendance();
                           }
                         },
-                        child: Text('Record Attendance'),
+                        child: const Text('Record Attendance'),
                       ),
                     ),
                   ],

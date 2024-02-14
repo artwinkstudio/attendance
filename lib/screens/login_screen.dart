@@ -26,12 +26,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void loginUser() async {
+    print("loginUser called"); // Verify that loginUser is called
+
     FocusScope.of(context).unfocus(); // Dismiss the keyboard
     final emailAddress = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (emailAddress.isEmpty || password.isEmpty) {
-      // Optionally handle empty fields case
+      print('emailAddress or password is empty');
       return;
     }
 
@@ -41,7 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
       if (mounted) {
+        print("Attempting to navigate to SelectionScreen");
+
         Navigator.pushNamed(context, SelectionScreen.id);
+      } else {
+        print("Is not mounted");
       }
     } on FirebaseAuthException catch (e) {
       print(e.code);
