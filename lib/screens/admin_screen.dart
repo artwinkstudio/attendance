@@ -1,6 +1,6 @@
 import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
-import 'package:attendance/models/studnets_model.dart';
+import 'package:attendance/models/students_model.dart';
 import 'package:attendance/models/users_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
