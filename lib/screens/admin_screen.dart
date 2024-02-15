@@ -2,6 +2,7 @@ import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/models/students_model.dart';
 import 'package:attendance/models/users_model.dart';
+import 'package:attendance/utils/snackbar_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,8 @@ class _AdminScreenState extends State<AdminScreen> {
   DateTime _selectedDate = DateTime.now();
   bool _isPresent = true;
   String? _selectedClassName;
+
+  final _snackbarUtil = SnackbarUtil();
 
   @override
   void initState() {
@@ -95,8 +98,7 @@ class _AdminScreenState extends State<AdminScreen> {
           'studentIDs': [],
         });
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("User created successfully")));
+          _snackbarUtil.showSnackbar(context, "User created successfully");
         }
 
         // Clear the form fields (if necessary) and reset the form
@@ -110,8 +112,7 @@ class _AdminScreenState extends State<AdminScreen> {
         await _fetchParents();
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Error creating user: $e")));
+          _snackbarUtil.showSnackbar(context, "Error creating user: $e");
         }
       }
     }
@@ -139,9 +140,7 @@ class _AdminScreenState extends State<AdminScreen> {
           'studentIDs': FieldValue.arrayUnion([newStudentId]),
         });
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content:
-                  Text("Student created and added to parent successfully")));
+          _snackbarUtil.showSnackbar(context, "Student created and added to parent successfully");
         }
 
         // Optionally, clear the form fields and update UI as needed
@@ -155,8 +154,7 @@ class _AdminScreenState extends State<AdminScreen> {
         await _fetchStudents();
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Error creating student: $e")));
+          _snackbarUtil.showSnackbar(context, "Error creating student: $e");
         }
       }
     }
@@ -192,8 +190,7 @@ class _AdminScreenState extends State<AdminScreen> {
           'className': _selectedClassName,
         });
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Attendance recorded successfully")));
+          _snackbarUtil.showSnackbar(context, "Attendance recorded successfully");
         }
 
         // Reset the form and state after successful submission
@@ -208,8 +205,7 @@ class _AdminScreenState extends State<AdminScreen> {
         });
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Error recording attendance: $e")));
+          _snackbarUtil.showSnackbar(context, "Error recording attendance: $e");
         }
       }
     }

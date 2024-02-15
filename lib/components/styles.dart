@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-const kSmallTextStyle = TextStyle(
-  fontSize: 20,
-);
+const kSmallTextStyle = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
 
 const kBigTextStyle = TextStyle(
   fontSize: 30,

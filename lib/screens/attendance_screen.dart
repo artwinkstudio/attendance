@@ -20,7 +20,7 @@ class AttendanceScreen extends StatefulWidget {
 }
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
-  Future<List<AttendanceModel>> fetchAttendanceRecords() async {
+  Future<List<AttendanceModel>> _fetchAttendanceRecords() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     List<AttendanceModel> attendanceRecords = [];
 
@@ -50,7 +50,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       ),
       backgroundColor: kBackgroundColor,
       body: FutureBuilder<List<AttendanceModel>>(
-        future: fetchAttendanceRecords(),
+        future: _fetchAttendanceRecords(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -83,7 +83,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             child: ListTile(
               leading: CircleAvatar(
                 backgroundColor: kAppBarBackgroundColor,
-                child: Text('${index + 1}', style: const TextStyle(color: Colors.black)),
+                child: Text('${attendanceRecords.length - index }', style: const TextStyle(color: Colors.black)),
               ),
               title: Text(record.className),
               subtitle: Text('Date: $formattedDate - Present: ${record.attendance ? 'Yes' : 'No'}'),

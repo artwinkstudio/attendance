@@ -17,7 +17,7 @@ class SelectionScreen extends StatefulWidget {
 class _SelectionScreenState extends State<SelectionScreen> {
   final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<UserModel?> fetchCurrentUser(String currentUserUid) async {
+  Future<UserModel?> _fetchCurrentUser(String currentUserUid) async {
     try {
       var userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -35,12 +35,15 @@ class _SelectionScreenState extends State<SelectionScreen> {
     }
   }
 
-  Future<List<MapEntry<String, StudentModel>>> fetchStudents(List<String> studentIds) async {
+  Future<List<MapEntry<String, StudentModel>>> _fetchStudents(
+      List<String> studentIds) async {
     List<MapEntry<String, StudentModel>> studentsWithIds = [];
     for (String id in studentIds) {
-      var studentDoc = await FirebaseFirestore.instance.collection('students').doc(id).get();
+      var studentDoc =
+          await FirebaseFirestore.instance.collection('students').doc(id).get();
       if (studentDoc.exists) {
-        studentsWithIds.add(MapEntry(id, StudentModel.fromJson(studentDoc.data() as Map<String, dynamic>)));
+        studentsWithIds.add(MapEntry(id,
+            StudentModel.fromJson(studentDoc.data() as Map<String, dynamic>)));
       }
     }
     return studentsWithIds;
@@ -69,7 +72,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   Widget _buildCurrentUserHeader() {
     return FutureBuilder<UserModel?>(
-      future: fetchCurrentUser(currentUserUid),
+      future: _fetchCurrentUser(currentUserUid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -81,7 +84,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Hi ${snapshot.data!.parentName}, please select:',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: kSmallTextStyle,
             ),
           );
         } else {
@@ -97,7 +100,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget _buildStudentsList() {
     return Expanded(
       child: FutureBuilder<List<MapEntry<String, StudentModel>>>(
-        future: fetchCurrentUser(currentUserUid).then((user) => fetchStudents(user!.studentIDs)),
+        future: _fetchCurrentUser(currentUserUid)
+            .then((user) => _fetchStudents(user!.studentIDs)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -106,11 +110,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var studentWithId = snapshot.data![index];
-                return _buildStudentListItem(studentWithId.key, studentWithId.value);
+                return _buildStudentListItem(
+                    studentWithId.key, studentWithId.value);
               },
             );
           } else {
-            return const Center(child: Text("No students found or error occurred"));
+            return const Center(
+                child: Text("No students found or error occurred"));
           }
         },
       ),
@@ -128,7 +134,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AttendanceScreen(parentId: currentUserUid, studentId: studentDocId),
+              builder: (context) => AttendanceScreen(
+                  parentId: currentUserUid, studentId: studentDocId),
             ),
           ),
         ),

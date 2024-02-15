@@ -6,7 +6,6 @@ import 'package:attendance/utils/snackbar_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   static const String id = '/';
@@ -42,7 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
       if (!mounted) return;
-      Navigator.pushNamed(context, SelectionScreen.id);
+      if (emailAddress == 'artwinkstudio@gmail.com') {
+        Navigator.pushNamed(context, AdminScreen.id);
+      } else {
+        Navigator.pushNamed(context, SelectionScreen.id);
+      }
     } on FirebaseAuthException catch (e) {
       _handleFirebaseAuthException(e);
     }
@@ -60,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     _snackbarUtil.showSnackbar(context, errorMessage);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -88,23 +90,24 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildTextField(_passwordController, 'Password', true),
             const SizedBox(height: 20),
             _buildLoginButton(),
-            const SizedBox(height: 20),
-            _buildAdminButton(),
+            // const SizedBox(height: 20),
+            // _buildAdminButton(),
           ],
         ),
       ),
     );
   }
 
-  TextField _buildTextField(TextEditingController controller, String label, bool obscureText) {
+  TextField _buildTextField(
+      TextEditingController controller, String label, bool obscureText) {
     return TextField(
       controller: controller,
-      keyboardType: obscureText ? TextInputType.text : TextInputType.emailAddress,
+      keyboardType:
+          obscureText ? TextInputType.text : TextInputType.emailAddress,
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        // You can adjust the styling as needed
       ),
     );
   }
@@ -117,11 +120,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildAdminButton() {
-    return TextButton(
-      onPressed: () => Navigator.pushNamed(context, AdminScreen.id),
-      style: kbuttonStyleAbmin,
-      child: const Text('Admin', style: kbuttonTextStyle),
-    );
-  }
+//   Widget _buildAdminButton() {
+//     return TextButton(
+//       onPressed: () => Navigator.pushNamed(context, AdminScreen.id),
+//       style: kbuttonStyleAbmin,
+//       child: const Text('Admin', style: kbuttonTextStyle),
+//     );
+//   }
 }
