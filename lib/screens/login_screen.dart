@@ -2,7 +2,7 @@ import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/screens/admin_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
-import 'package:attendance/utils/snackbar_util.dart';
+import 'package:attendance/utils/snackbar_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

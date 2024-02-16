@@ -1,5 +1,6 @@
 import 'package:attendance/firebase_options.dart';
 import 'package:attendance/screens/admin_screen.dart';
+import 'package:attendance/screens/admin_view_screen.dart';
 import 'package:attendance/screens/login_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,13 +19,14 @@ class Attendance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp( 
       initialRoute: LoginScreen.id,
       routes: {
         LoginScreen.id: (context) => const LoginScreen(),
         SelectionScreen.id : (context) => const SelectionScreen(),
         // AttendanceScreen.id: (context) => const AttendanceScreen(),
         AdminScreen.id:(context) =>  const AdminScreen(),
+        AdminViewScreen.id : (context) => const AdminViewScreen(),
       },
     );
   }

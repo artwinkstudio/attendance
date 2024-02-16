@@ -2,7 +2,9 @@ import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/models/students_model.dart';
 import 'package:attendance/models/users_model.dart';
-import 'package:attendance/utils/snackbar_util.dart';
+import 'package:attendance/screens/admin_view_screen.dart';
+import 'package:attendance/utils/snackbar_utils.dart';
+import 'package:attendance/utils/firebase_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
+  List<Map<String, dynamic>> _parents = [];
+  List<Map<String, dynamic>> _students = [];
   final GlobalKey<FormState> _formKeyUser = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyStudent = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyAttendance = GlobalKey<FormState>();
@@ -29,8 +33,6 @@ class _AdminScreenState extends State<AdminScreen> {
   int _remainingClasses = 0;
   String? _selectedParentId;
   String? _selectedStudentId;
-  List<Map<String, dynamic>> _parents = [];
-  List<Map<String, dynamic>> _students = [];
   DateTime _selectedDate = DateTime.now();
   bool _isPresent = true;
   String? _selectedClassName;
@@ -45,78 +47,46 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Future<void> _fetchParents() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('users').get();
-      final List<Map<String, dynamic>> fetchedParents =
-          querySnapshot.docs.map((doc) {
-        return {
-          'data': UserModel.fromJson(doc.data() as Map<String, dynamic>),
-          'id': doc.id,
-        };
-      }).toList();
-
-      setState(() {
-        _parents = fetchedParents;
-      });
-    } catch (e) {
-      print("Error fetching parents: $e");
-    }
+    final fetchedParents = await FirebaseUtils.fetchParents();
+    setState(() {
+      _parents = fetchedParents;
+    });
   }
 
   Future<void> _fetchStudents() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('students').get();
-      final List<Map<String, dynamic>> fetchedStudents =
-          querySnapshot.docs.map((doc) {
-        return {
-          'data': StudentModel.fromJson(doc.data() as Map<String, dynamic>),
-          'id': doc.id,
-        };
-      }).toList();
-
-      setState(() {
-        _students = fetchedStudents;
-      });
-    } catch (e) {
-      print("Error fetching students: $e");
-    }
+    final fetchedStudents = await FirebaseUtils.fetchStudents();
+    setState(() {
+      _students = fetchedStudents;
+    });
   }
 
-  Future<void> _createUserWithEmailAndPassword() async {
+  Future<void> _createUser() async {
     if (_formKeyUser.currentState!.validate()) {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: _email, password: _password);
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
-          'email': _email,
-          'parentName': _parentName,
-          'studentIDs': [],
-        });
-        if (mounted) {
-          _snackbarUtil.showSnackbar(context, "User created successfully");
-        }
-
-        // Clear the form fields (if necessary) and reset the form
-        _email = '';
-        _password = '';
-        _parentName = '';
-        // Reset the form state if you're clearing fields
-        _formKeyUser.currentState?.reset();
-
-        // Refetch the parents to update the dropdown
-        await _fetchParents();
-      } catch (e) {
-        if (mounted) {
-          _snackbarUtil.showSnackbar(context, "Error creating user: $e");
-        }
-      }
+      FirebaseUtils.createUserWithEmailAndPassword(
+        email: _email,
+        password: _password,
+        parentName: _parentName,
+        onSuccess: () {
+          if (mounted) {
+            _snackbarUtil.showSnackbar(context, "User created successfully");
+          }
+          setState(() {
+            _email = '';
+            _password = '';
+            _parentName = '';
+          });
+          _formKeyUser.currentState?.reset();
+          _fetchParents(); 
+        },
+        onError: (String message) {
+          if (mounted) {
+            _snackbarUtil.showSnackbar(context, message);
+          }
+        },
+      );
     }
   }
+
 
   Future<void> _createStudent() async {
     if (_formKeyStudent.currentState!.validate()) {
@@ -140,13 +110,15 @@ class _AdminScreenState extends State<AdminScreen> {
           'studentIDs': FieldValue.arrayUnion([newStudentId]),
         });
         if (mounted) {
-          _snackbarUtil.showSnackbar(context, "Student created and added to parent successfully");
+          _snackbarUtil.showSnackbar(
+              context, "Student created and added to parent successfully");
         }
 
-        // Optionally, clear the form fields and update UI as needed
-        _studentName = '';
-        _remainingClasses = 0;
-        _selectedParentId = null; // Reset selected parent ID if needed
+        setState(() {
+          _studentName = '';
+          _remainingClasses = 0;
+          _selectedParentId = null; // Reset selected parent ID if needed
+        });
 
         _formKeyStudent.currentState?.reset();
 
@@ -190,19 +162,18 @@ class _AdminScreenState extends State<AdminScreen> {
           'className': _selectedClassName,
         });
         if (mounted) {
-          _snackbarUtil.showSnackbar(context, "Attendance recorded successfully");
+          _snackbarUtil.showSnackbar(
+              context, "Attendance recorded successfully");
         }
 
-        // Reset the form and state after successful submission
-        _formKeyAttendance.currentState?.reset();
         setState(() {
-          // Reset your custom state variables to their initial values
-          _selectedDate = DateTime.now(); // Reset to current date
-          _isPresent = true; // Reset to default attendance value
-          _selectedStudentId = null; // Clear the selected student
-          _selectedParentId = null; // Clear the selected parent
-          _selectedClassName = null; // Reset the selected class name
+          _selectedDate = DateTime.now();
+          _isPresent = true;
+          _selectedStudentId = null;
+          _selectedParentId = null;
+          _selectedClassName = null;
         });
+        _formKeyAttendance.currentState?.reset();
       } catch (e) {
         if (mounted) {
           _snackbarUtil.showSnackbar(context, "Error recording attendance: $e");
@@ -216,6 +187,11 @@ class _AdminScreenState extends State<AdminScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Screen'),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.pushNamed(context, AdminViewScreen.id),
+              icon: const Icon(Icons.list)),
+        ],
         backgroundColor: kAppBarBackgroundColor,
       ),
       backgroundColor: kBackgroundColor,
@@ -250,7 +226,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           value!.isEmpty ? 'Please enter a parent name' : null,
                     ),
                     ElevatedButton(
-                      onPressed: _createUserWithEmailAndPassword,
+                      onPressed: _createUser,
                       child: const Text('Create User'),
                     ),
                   ],
