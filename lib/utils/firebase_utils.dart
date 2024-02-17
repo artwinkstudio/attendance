@@ -74,4 +74,77 @@ class FirebaseUtils {
       onError("Error creating user: $e");
     }
   }
+
+  static Future<void> createStudent({
+    required String studentName,
+    required int remainingClasses,
+    required String parentId,
+    required Function onSuccess,
+    required Function(String) onError,
+  }) async {
+    if (studentName.isEmpty || parentId.isEmpty) {
+      onError("Student name and parent must be provided");
+      return;
+    }
+
+    try {
+      DocumentReference studentRef =
+          await FirebaseFirestore.instance.collection('students').add({
+        'studentName': studentName,
+        'remainingClasses': remainingClasses,
+        'parentId': parentId,
+      });
+
+      String newStudentId = studentRef.id;
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(parentId)
+          .update({
+        'studentIDs': FieldValue.arrayUnion([newStudentId]),
+      });
+
+      onSuccess();
+    } catch (e) {
+      onError("Error creating student: $e");
+    }
+  }
+
+  static Future<void> addAttendance({
+    required String studentId,
+    required String parentId,
+    required DateTime attendanceDate,
+    required bool isPresent,
+    required String className,
+    required Function onSuccess,
+    required Function(String) onError,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection('attendance').add({
+        'studentId': studentId,
+        'parentId': parentId,
+        'attendanceDate': Timestamp.fromDate(attendanceDate),
+        'attendance': isPresent,
+        'className': className,
+      });
+
+      onSuccess();
+    } catch (e) {
+      onError("Error recording attendance: $e");
+    }
+  }
+
+   static Future<List<MapEntry<String, StudentModel>>> fetchStudentsbyID(
+      List<String> studentIds) async {
+    List<MapEntry<String, StudentModel>> studentsWithIds = [];
+    for (String id in studentIds) {
+      var studentDoc =
+          await FirebaseFirestore.instance.collection('students').doc(id).get();
+      if (studentDoc.exists) {
+        studentsWithIds.add(MapEntry(id,
+            StudentModel.fromJson(studentDoc.data() as Map<String, dynamic>)));
+      }
+    }
+    return studentsWithIds;
+  }
 }

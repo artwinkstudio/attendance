@@ -1,12 +1,9 @@
 import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
-import 'package:attendance/models/students_model.dart';
-import 'package:attendance/models/users_model.dart';
-import 'package:attendance/screens/admin_view_screen.dart';
+import 'package:attendance/screens/admin_view_user_screen.dart';
 import 'package:attendance/utils/snackbar_utils.dart';
 import 'package:attendance/utils/firebase_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -76,7 +73,7 @@ class _AdminScreenState extends State<AdminScreen> {
             _parentName = '';
           });
           _formKeyUser.currentState?.reset();
-          _fetchParents(); 
+          _fetchParents();
         },
         onError: (String message) {
           if (mounted) {
@@ -87,48 +84,34 @@ class _AdminScreenState extends State<AdminScreen> {
     }
   }
 
-
   Future<void> _createStudent() async {
     if (_formKeyStudent.currentState!.validate()) {
-      try {
-        // Create the student in Firestore
-        DocumentReference studentRef =
-            await FirebaseFirestore.instance.collection('students').add({
-          'studentName': _studentName,
-          'remainingClasses': _remainingClasses,
-          'parentId': _selectedParentId,
-        });
+      FirebaseUtils.createStudent(
+        studentName: _studentName,
+        remainingClasses: _remainingClasses,
+        parentId: _selectedParentId ?? "",
+        onSuccess: () {
+          if (mounted) {
+            _snackbarUtil.showSnackbar(
+                context, "Student created and added to parent successfully");
+          }
 
-        // Get the newly created student's Firestore document ID
-        String newStudentId = studentRef.id;
+          setState(() {
+            _studentName = '';
+            _remainingClasses = 0;
+            _selectedParentId = null;
+          });
 
-        // Add the new student's ID to the selected parent's 'studentIDs' array
-        DocumentReference parentRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(_selectedParentId);
-        await parentRef.update({
-          'studentIDs': FieldValue.arrayUnion([newStudentId]),
-        });
-        if (mounted) {
-          _snackbarUtil.showSnackbar(
-              context, "Student created and added to parent successfully");
-        }
+          _formKeyStudent.currentState?.reset();
 
-        setState(() {
-          _studentName = '';
-          _remainingClasses = 0;
-          _selectedParentId = null; // Reset selected parent ID if needed
-        });
-
-        _formKeyStudent.currentState?.reset();
-
-        // Refetch the parents to update the dropdown
-        await _fetchStudents();
-      } catch (e) {
-        if (mounted) {
-          _snackbarUtil.showSnackbar(context, "Error creating student: $e");
-        }
-      }
+          _fetchStudents();
+        },
+        onError: (String message) {
+          if (mounted) {
+            _snackbarUtil.showSnackbar(context, message);
+          }
+        },
+      );
     }
   }
 
@@ -138,7 +121,6 @@ class _AdminScreenState extends State<AdminScreen> {
       initialTime: TimeOfDay.now(),
     );
     if (pickedTime != null) {
-      // Update the _selectedDate with the picked time
       setState(() {
         _selectedDate = DateTime(
           _selectedDate.year,
@@ -153,32 +135,34 @@ class _AdminScreenState extends State<AdminScreen> {
 
   Future<void> _addAttendance() async {
     if (_formKeyAttendance.currentState!.validate()) {
-      try {
-        await FirebaseFirestore.instance.collection('attendance').add({
-          'studentId': _selectedStudentId,
-          'parentId': _selectedParentId,
-          'attendanceDate': Timestamp.fromDate(_selectedDate),
-          'attendance': _isPresent,
-          'className': _selectedClassName,
-        });
-        if (mounted) {
-          _snackbarUtil.showSnackbar(
-              context, "Attendance recorded successfully");
-        }
+      FirebaseUtils.addAttendance(
+        studentId: _selectedStudentId ?? "",
+        parentId: _selectedParentId ?? "",
+        attendanceDate: _selectedDate,
+        isPresent: _isPresent,
+        className: _selectedClassName ?? "",
+        onSuccess: () {
+          if (mounted) {
+            _snackbarUtil.showSnackbar(
+                context, "Attendance recorded successfully");
+          }
 
-        setState(() {
-          _selectedDate = DateTime.now();
-          _isPresent = true;
-          _selectedStudentId = null;
-          _selectedParentId = null;
-          _selectedClassName = null;
-        });
-        _formKeyAttendance.currentState?.reset();
-      } catch (e) {
-        if (mounted) {
-          _snackbarUtil.showSnackbar(context, "Error recording attendance: $e");
-        }
-      }
+          setState(() {
+            _selectedDate = DateTime.now();
+            _isPresent = true;
+            _selectedStudentId = null;
+            _selectedParentId = null;
+            _selectedClassName = null;
+          });
+
+          _formKeyAttendance.currentState?.reset();
+        },
+        onError: (String message) {
+          if (mounted) {
+            _snackbarUtil.showSnackbar(context, message);
+          }
+        },
+      );
     }
   }
 

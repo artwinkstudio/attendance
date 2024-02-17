@@ -5,6 +5,7 @@ import 'package:attendance/screens/attendance_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:attendance/utils/firebase_utils.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({super.key});
@@ -33,20 +34,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
       debugPrint("Error fetching user: $e");
       return null;
     }
-  }
-
-  Future<List<MapEntry<String, StudentModel>>> _fetchStudents(
-      List<String> studentIds) async {
-    List<MapEntry<String, StudentModel>> studentsWithIds = [];
-    for (String id in studentIds) {
-      var studentDoc =
-          await FirebaseFirestore.instance.collection('students').doc(id).get();
-      if (studentDoc.exists) {
-        studentsWithIds.add(MapEntry(id,
-            StudentModel.fromJson(studentDoc.data() as Map<String, dynamic>)));
-      }
-    }
-    return studentsWithIds;
   }
 
   @override
@@ -101,7 +88,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     return Expanded(
       child: FutureBuilder<List<MapEntry<String, StudentModel>>>(
         future: _fetchCurrentUser(currentUserUid)
-            .then((user) => _fetchStudents(user!.studentIDs)),
+            .then((user) => FirebaseUtils.fetchStudentsbyID(user!.studentIDs)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
