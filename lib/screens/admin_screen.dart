@@ -173,7 +173,7 @@ class _AdminScreenState extends State<AdminScreen> {
         title: const Text('Admin Screen'),
         actions: [
           IconButton(
-              onPressed: () => Navigator.pushNamed(context, AdminViewScreen.id),
+              onPressed: () => Navigator.pushNamed(context, AdminViewUserScreen.id),
               icon: const Icon(Icons.list)),
         ],
         backgroundColor: kAppBarBackgroundColor,

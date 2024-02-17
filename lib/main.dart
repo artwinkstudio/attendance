@@ -26,7 +26,7 @@ class Attendance extends StatelessWidget {
         SelectionScreen.id : (context) => const SelectionScreen(),
         // AttendanceScreen.id: (context) => const AttendanceScreen(),
         AdminScreen.id:(context) =>  const AdminScreen(),
-        AdminViewScreen.id : (context) => const AdminViewScreen(),
+        AdminViewUserScreen.id : (context) => const AdminViewUserScreen(),
       },
     );
   }

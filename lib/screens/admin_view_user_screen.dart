@@ -5,16 +5,16 @@ import 'package:attendance/screens/attendance_screen.dart';
 import 'package:attendance/utils/firebase_utils.dart';
 import 'package:flutter/material.dart';
 
-class AdminViewScreen extends StatefulWidget {
-  const AdminViewScreen({super.key});
+class AdminViewUserScreen extends StatefulWidget {
+  const AdminViewUserScreen({super.key});
 
   static String id = 'AdminViewScreen';
 
   @override
-  State<AdminViewScreen> createState() => _AdminViewScreenState();
+  State<AdminViewUserScreen> createState() => _AdminViewUserScreenState();
 }
 
-class _AdminViewScreenState extends State<AdminViewScreen> {
+class _AdminViewUserScreenState extends State<AdminViewUserScreen> {
   List<Map<String, dynamic>> _parents = [];
 
   @override
