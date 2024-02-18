@@ -195,4 +195,41 @@ class FirebaseUtils {
       return null;
     }
   }
+
+  static Future<StudentModel?> fetchStudentByID(String studentId) async {
+    try {
+      DocumentSnapshot studentDoc = await FirebaseFirestore.instance
+          .collection('students')
+          .doc(studentId)
+          .get();
+
+      if (studentDoc.exists) {
+        StudentModel student = StudentModel.fromJson({
+          ...studentDoc.data() as Map<String, dynamic>,
+          'id': studentDoc.id
+        });
+
+        return student;
+      } else {
+        print('students not exists');
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching student by ID: $e");
+      return null;
+    }
+  }
+
+  static Future<void> incrementRemainingClasses({
+    required String studentId,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('students')
+          .doc(studentId)
+          .update({'remainingClasses': FieldValue.increment(1)});
+    } catch (e) {
+      print("Error incrementing remaining classes: $e");
+    }
+  }
 }

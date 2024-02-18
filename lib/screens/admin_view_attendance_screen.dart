@@ -83,7 +83,7 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
                         ),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => _deleteAttendance(docId),
+                          onPressed: () => _deleteAttendance(docId, attendanceData.studentId),
                         ),
                       );
                     },
@@ -141,7 +141,7 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
   //   );
   // }
 
-  void _deleteAttendance(String docId) {
+  void _deleteAttendance(String docId, String studentID) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -163,6 +163,8 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
 
                 FirebaseUtils.deleteAttendance(docId).then((_) {
                   if (mounted) {
+                    FirebaseUtils.incrementRemainingClasses(studentId: studentID);
+
                     _snackbarUtil.showSnackbar(
                         context, 'Attendance deleted successfully');
                   }

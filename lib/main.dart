@@ -8,8 +8,8 @@ import 'package:attendance/screens/selection_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -21,16 +21,17 @@ class Attendance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
+    return MaterialApp(
       initialRoute: LoginScreen.id,
       routes: {
         LoginScreen.id: (context) => const LoginScreen(),
-        SelectionScreen.id : (context) => const SelectionScreen(),
+        SelectionScreen.id: (context) => const SelectionScreen(),
         // AttendanceScreen.id: (context) => const AttendanceScreen(),
-        AdminScreen.id:(context) =>  const AdminScreen(),
-        AdminViewUserScreen.id : (context) => const AdminViewUserScreen(),
-        AdminViewStudentScreen.id : (context) => const AdminViewStudentScreen(),
-        AdminViewAttendanceScreen.id :(context) => const AdminViewAttendanceScreen(),
+        AdminScreen.id: (context) => const AdminScreen(),
+        AdminViewUserScreen.id: (context) => const AdminViewUserScreen(),
+        AdminViewStudentScreen.id: (context) => const AdminViewStudentScreen(),
+        AdminViewAttendanceScreen.id: (context) =>
+            const AdminViewAttendanceScreen(),
       },
     );
   }
