@@ -1,5 +1,7 @@
 import 'package:attendance/firebase_options.dart';
 import 'package:attendance/screens/admin_screen.dart';
+import 'package:attendance/screens/admin_view_attendance_screen.dart';
+import 'package:attendance/screens/admin_view_student_screen.dart';
 import 'package:attendance/screens/admin_view_user_screen.dart';
 import 'package:attendance/screens/login_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
@@ -27,6 +29,8 @@ class Attendance extends StatelessWidget {
         // AttendanceScreen.id: (context) => const AttendanceScreen(),
         AdminScreen.id:(context) =>  const AdminScreen(),
         AdminViewUserScreen.id : (context) => const AdminViewUserScreen(),
+        AdminViewStudentScreen.id : (context) => const AdminViewStudentScreen(),
+        AdminViewAttendanceScreen.id :(context) => const AdminViewAttendanceScreen(),
       },
     );
   }

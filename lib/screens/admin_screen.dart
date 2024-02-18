@@ -1,5 +1,7 @@
 import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
+import 'package:attendance/screens/admin_view_attendance_screen.dart';
+import 'package:attendance/screens/admin_view_student_screen.dart';
 import 'package:attendance/screens/admin_view_user_screen.dart';
 import 'package:attendance/utils/snackbar_utils.dart';
 import 'package:attendance/utils/firebase_utils.dart';
@@ -22,6 +24,8 @@ class _AdminScreenState extends State<AdminScreen> {
   final GlobalKey<FormState> _formKeyUser = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyStudent = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyAttendance = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyUpdateRemainingClasses =
+      GlobalKey<FormState>();
 
   String _email = '';
   String _password = '';
@@ -33,6 +37,8 @@ class _AdminScreenState extends State<AdminScreen> {
   DateTime _selectedDate = DateTime.now();
   bool _isPresent = true;
   String? _selectedClassName;
+  String? _selectedStudentIdForUpdate;
+  int _newRemainingClasses = 0;
 
   final _snackbarUtil = SnackbarUtil();
 
@@ -141,10 +147,34 @@ class _AdminScreenState extends State<AdminScreen> {
         attendanceDate: _selectedDate,
         isPresent: _isPresent,
         className: _selectedClassName ?? "",
-        onSuccess: () {
+        onSuccess: () async {
           if (mounted) {
             _snackbarUtil.showSnackbar(
                 context, "Attendance recorded successfully");
+            // Now, decrement the remaining classes for the student
+            if (_selectedStudentId != null) {
+              final DocumentReference studentRef = FirebaseFirestore.instance
+                  .collection('students')
+                  .doc(_selectedStudentId);
+              FirebaseFirestore.instance.runTransaction((transaction) async {
+                DocumentSnapshot studentSnapshot =
+                    await transaction.get(studentRef);
+                if (studentSnapshot.exists) {
+                  int currentRemainingClasses =
+                      studentSnapshot.get('remainingClasses');
+                  if (currentRemainingClasses > 0) {
+                    transaction.update(studentRef,
+                        {'remainingClasses': currentRemainingClasses - 1});
+                  }
+                }
+              }).then((value) {
+                _snackbarUtil.showSnackbar(
+                    context, "Remaining classes updated successfully");
+              }).catchError((error) {
+                _snackbarUtil.showSnackbar(
+                    context, "Error updating remaining classes: $error");
+              });
+            }
           }
 
           setState(() {
@@ -166,6 +196,33 @@ class _AdminScreenState extends State<AdminScreen> {
     }
   }
 
+  Future<void> _updateStudentRemainingClasses() async {
+    if (_selectedStudentIdForUpdate != null) {
+      await FirebaseFirestore.instance
+          .collection('students')
+          .doc(_selectedStudentIdForUpdate)
+          .update({
+        'remainingClasses': _newRemainingClasses,
+      }).then((_) {
+        _snackbarUtil.showSnackbar(
+            context, "Remaining classes updated successfully");
+        _fetchStudents(); // Refresh the list of students
+      }).catchError((error) {
+        _snackbarUtil.showSnackbar(
+            context, "Error updating remaining classes: $error");
+      });
+
+      // Reset the form and state
+      setState(() {
+        _selectedStudentIdForUpdate = null;
+        _newRemainingClasses = 0;
+      });
+      _formKeyUpdateRemainingClasses.currentState?.reset();
+    } else {
+      _snackbarUtil.showSnackbar(context, "No student selected");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,7 +230,16 @@ class _AdminScreenState extends State<AdminScreen> {
         title: const Text('Admin Screen'),
         actions: [
           IconButton(
-              onPressed: () => Navigator.pushNamed(context, AdminViewUserScreen.id),
+              onPressed: () =>
+                  Navigator.pushNamed(context, AdminViewUserScreen.id),
+              icon: const Icon(Icons.people_rounded)),
+          IconButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, AdminViewStudentScreen.id),
+              icon: const Icon(Icons.emoji_people)),
+          IconButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, AdminViewAttendanceScreen.id),
               icon: const Icon(Icons.list)),
         ],
         backgroundColor: kAppBarBackgroundColor,
@@ -282,9 +348,6 @@ class _AdminScreenState extends State<AdminScreen> {
                           final studentData =
                               studentDoc.data() as Map<String, dynamic>;
                           final String? parentId = studentData['parentId'];
-
-                          // Update the parent dropdown to reflect the selected student's parent
-                          // But allow the admin to change it if needed
                           setState(() {
                             _selectedParentId = parentId;
                           });
@@ -395,6 +458,53 @@ class _AdminScreenState extends State<AdminScreen> {
                 ),
               ),
               adminDivider,
+              // Form for updating remaining classes for a student
+              Form(
+                key: _formKeyUpdateRemainingClasses,
+                child: Column(
+                  children: [
+                    DropdownButtonFormField<String>(
+                      value: _selectedStudentIdForUpdate,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedStudentIdForUpdate = newValue;
+                        });
+                      },
+                      items: _students.map((student) {
+                        return DropdownMenuItem<String>(
+                          value: student['id'],
+                          child: Text(student['data'].studentName),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                          labelText: 'Select a Student for Update'),
+                      validator: (value) =>
+                          value == null ? 'Please select a student' : null,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'New Remaining Classes'),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) =>
+                          _newRemainingClasses = int.tryParse(value) ?? 0,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter a valid number'
+                          : null,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Validate form and update student remaining classes
+                        if (_formKeyUpdateRemainingClasses.currentState!
+                            .validate()) {
+                          _updateStudentRemainingClasses();
+                        }
+                      },
+                      child: const Text('Update Remaining Classes'),
+                    ),
+                    adminDivider,
+                  ],
+                ),
+              ),
             ],
           ),
         ),

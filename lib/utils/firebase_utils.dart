@@ -1,3 +1,4 @@
+import 'package:attendance/models/attendance_model.dart';
 import 'package:attendance/models/students_model.dart';
 import 'package:attendance/models/users_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,6 +39,25 @@ class FirebaseUtils {
       return fetchedStudents;
     } catch (e) {
       print("Error fetching student: $e");
+      return [];
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchAttendances() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('attendance').get();
+      final List<Map<String, dynamic>> fetchedAttendances =
+          querySnapshot.docs.map((doc) {
+        return {
+          'data': AttendanceModel.fromJson(doc.data() as Map<String, dynamic>),
+          'id': doc.id,
+        };
+      }).toList();
+
+      return fetchedAttendances;
+    } catch (e) {
+      print("Error fetching attendance: $e");
       return [];
     }
   }
@@ -134,7 +154,7 @@ class FirebaseUtils {
     }
   }
 
-   static Future<List<MapEntry<String, StudentModel>>> fetchStudentsbyID(
+  static Future<List<MapEntry<String, StudentModel>>> fetchStudentsbyID(
       List<String> studentIds) async {
     List<MapEntry<String, StudentModel>> studentsWithIds = [];
     for (String id in studentIds) {
@@ -146,5 +166,33 @@ class FirebaseUtils {
       }
     }
     return studentsWithIds;
+  }
+
+  static Future<void> deleteAttendance(String docId) async {
+    await FirebaseFirestore.instance
+        .collection('attendance')
+        .doc(docId)
+        .delete();
+  }
+
+  static Future<UserModel?> fetchParentByID(String parentId) async {
+    try {
+      DocumentSnapshot parentDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(parentId)
+          .get();
+
+      if (parentDoc.exists) {
+        UserModel parent = UserModel.fromJson(
+            {...parentDoc.data() as Map<String, dynamic>, 'id': parentDoc});
+
+        return parent;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching parent by ID: $e");
+      return null;
+    }
   }
 }

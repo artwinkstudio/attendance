@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class AdminViewUserScreen extends StatefulWidget {
   const AdminViewUserScreen({super.key});
 
-  static String id = 'AdminViewScreen';
+  static String id = 'AdminViewUserScreen';
 
   @override
   State<AdminViewUserScreen> createState() => _AdminViewUserScreenState();
