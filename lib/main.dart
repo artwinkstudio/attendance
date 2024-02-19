@@ -22,7 +22,7 @@ class Attendance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ArtWinkStudio',
+      title: 'ArtWinkStudio - Attendance',
       initialRoute: LoginScreen.id,
       routes: {
         LoginScreen.id: (context) => const LoginScreen(),
