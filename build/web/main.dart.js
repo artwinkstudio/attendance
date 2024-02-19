@@ -12778,9 +12778,11 @@ a1i:function a1i(a){this.a=a},
 aPu(){return new A.zR(new A.aaS(),A.B(t.K,t.Qu))},
 aiW:function aiW(a,b){this.a=a
 this.b=b},
-AB:function AB(a,b,c){this.f=a
-this.r=b
-this.a=c},
+AB:function AB(a,b,c,d){var _=this
+_.f=a
+_.r=b
+_.cx=c
+_.a=d},
 aaS:function aaS(){},
 aaW:function aaW(){},
 FX:function FX(a){var _=this
@@ -46822,7 +46824,7 @@ A.a6v.prototype={
 $1(a){return this.a.$2(a,this.b)},
 $S:490}
 A.JN.prototype={
-G(a){return new A.AB(A.au(["/",new A.a1A(),"/SelectionScreen",new A.a1B(),"/AdminScreen",new A.a1C(),"AdminViewUserScreen",new A.a1D(),"AdminViewStudentScreen",new A.a1E(),"AdminViewAttendanceScreen",new A.a1F()],t.N,t.Ab),"/",null)}}
+G(a){return new A.AB(A.au(["/",new A.a1A(),"/SelectionScreen",new A.a1B(),"/AdminScreen",new A.a1C(),"AdminViewUserScreen",new A.a1D(),"AdminViewStudentScreen",new A.a1E(),"AdminViewAttendanceScreen",new A.a1F()],t.N,t.Ab),"/","ArtWinkStudio",null)}}
 A.a1A.prototype={
 $1(a){return B.Ly},
 $S:489}
@@ -54429,11 +54431,11 @@ if(l==null)l=o.ax.b
 k.a.toString
 s=b==null?B.ax:b
 return new A.Cq(A.a3U(new A.xL(o,s,B.S,B.H,j,j),l,j,j,n),j)},
-a5z(a){var s,r=this,q=null,p=r.a,o=p.f
-p=p.r
+a5z(a){var s,r=this,q=null,p=r.a,o=p.f,n=p.r
+p=p.cx
 s=r.gadB()
 r.a.toString
-return new A.E2(q,q,q,new A.aqq(),q,q,q,q,q,q,o,q,q,p,B.Jt,r.gadL(),"",q,B.RS,B.ht,q,s,q,q,B.ou,!1,!1,!1,!1,r.gadc(),!0,q,q,q,new A.pJ(r,t.bT))},
+return new A.E2(q,q,q,new A.aqq(),q,q,q,q,q,q,o,q,q,n,B.Jt,r.gadL(),p,q,B.RS,B.ht,q,s,q,q,B.ou,!1,!1,!1,!1,r.gadc(),!0,q,q,q,new A.pJ(r,t.bT))},
 G(a){var s,r=null,q=A.pz(!1,!1,this.a5z(a),r,r,r,r,!0,r,r,new A.aqr(),r,r,r)
 this.a.toString
 s=this.d
