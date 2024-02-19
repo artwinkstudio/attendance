@@ -21,3 +21,7 @@ v0.2
  - Next step:
     - Push to web
 
+
+<!-- TODO: -->
+1. Remove location access
+2. Add app icon and web icon
