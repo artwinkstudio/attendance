@@ -3,6 +3,7 @@ import 'package:attendance/screens/admin_screen.dart';
 import 'package:attendance/screens/admin_view_attendance_screen.dart';
 import 'package:attendance/screens/admin_view_student_screen.dart';
 import 'package:attendance/screens/admin_view_user_screen.dart';
+import 'package:attendance/screens/attendance_screen.dart';
 import 'package:attendance/screens/login_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,6 +34,18 @@ class Attendance extends StatelessWidget {
         AdminViewStudentScreen.id: (context) => const AdminViewStudentScreen(),
         AdminViewAttendanceScreen.id: (context) =>
             const AdminViewAttendanceScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == AttendanceScreen.id) {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+              builder: (context) => AttendanceScreen(
+                    parentId: args['parentId'],
+                    studentId: args['studentId'],
+                  ));
+        } else {
+          return null;
+        }
       },
     );
   }

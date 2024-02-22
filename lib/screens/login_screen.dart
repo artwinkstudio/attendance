@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: _buildLoginForm(),
       ),
     );
@@ -78,14 +78,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLoginForm() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: EdgeInsets.only(
+          top: 40.0,
+          left: 40.0,
+          right: 40.0,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: (MediaQuery.of(context).size.height) / 5,
-            ),
+            // SizedBox(
+            //   height: (MediaQuery.of(context).size.height) / 5,
+            // ),
             const SizedBox(height: 20),
             logoImage,
             const SizedBox(height: 20),
@@ -95,9 +100,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 20),
             _buildLoginButton(),
             const SizedBox(height: 20),
-            SizedBox(
-              height: (MediaQuery.of(context).size.height) / 5,
-            ),
+            // SizedBox(
+            //   height: (MediaQuery.of(context).size.height) / 5,
+            // ),
           ],
         ),
       ),
