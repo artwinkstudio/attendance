@@ -67,10 +67,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: kBackgroundColor,),
+      // appBar: AppBar(
+      //   backgroundColor: kBackgroundColor,
+      // ),
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
-        child: _buildLoginForm(),
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: IntrinsicHeight(child: _buildLoginForm()),
+        ),
+        reverse: true,
       ),
     );
   }
