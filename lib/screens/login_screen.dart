@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
           top: 40.0,
           left: 40.0,
           right: 40.0,
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 40,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
