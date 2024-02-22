@@ -42,9 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       if (!mounted) return;
       if (emailAddress == 'artwinkstudio@gmail.com') {
-        Navigator.pushNamed(context, AdminScreen.id);
+        Navigator.pushReplacementNamed(context, AdminScreen.id);
       } else {
-        Navigator.pushNamed(context, SelectionScreen.id);
+        Navigator.pushReplacementNamed(context, SelectionScreen.id);
       }
     } on FirebaseAuthException catch (e) {
       _handleFirebaseAuthException(e);
