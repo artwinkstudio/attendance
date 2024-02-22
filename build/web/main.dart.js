@@ -46824,7 +46824,7 @@ A.a6v.prototype={
 $1(a){return this.a.$2(a,this.b)},
 $S:490}
 A.JN.prototype={
-G(a){return new A.AB(A.au(["/",new A.a1A(),"/SelectionScreen",new A.a1B(),"/AdminScreen",new A.a1C(),"AdminViewUserScreen",new A.a1D(),"AdminViewStudentScreen",new A.a1E(),"AdminViewAttendanceScreen",new A.a1F()],t.N,t.Ab),"/","ArtWinkStudio",null)}}
+G(a){return new A.AB(A.au(["/",new A.a1A(),"/SelectionScreen",new A.a1B(),"/AdminScreen",new A.a1C(),"AdminViewUserScreen",new A.a1D(),"AdminViewStudentScreen",new A.a1E(),"AdminViewAttendanceScreen",new A.a1F()],t.N,t.Ab),"/","ArtWinkStudio - Attendance",null)}}
 A.a1A.prototype={
 $1(a){return B.Ly},
 $S:489}
