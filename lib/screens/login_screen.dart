@@ -83,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 130),
             logoImage,
             const SizedBox(height: 20),
             _buildTextField(_emailController, 'Email', false),
@@ -91,8 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildTextField(_passwordController, 'Password', true),
             const SizedBox(height: 20),
             _buildLoginButton(),
-            // const SizedBox(height: 20),
-            // _buildAdminButton(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
