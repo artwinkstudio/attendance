@@ -67,17 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: kBackgroundColor,
-      // ),
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
-        child: Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: IntrinsicHeight(child: _buildLoginForm()),
-        ),
-        reverse: true,
+        physics: AlwaysScrollableScrollPhysics(),
+        child: _buildLoginForm(),
       ),
     );
   }
@@ -90,6 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(
+              height: (MediaQuery.of(context).size.height) / 5,
+            ),
+            const SizedBox(height: 20),
             logoImage,
             const SizedBox(height: 20),
             _buildTextField(_emailController, 'Email', false),
@@ -98,6 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 20),
             _buildLoginButton(),
             const SizedBox(height: 20),
+            SizedBox(
+              height: (MediaQuery.of(context).size.height) / 5,
+            ),
           ],
         ),
       ),
