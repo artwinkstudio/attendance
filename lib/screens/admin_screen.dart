@@ -274,6 +274,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       child: Column(
                         children: [
                           TextFormField(
+                            keyboardType: TextInputType.emailAddress,
                             decoration:
                                 const InputDecoration(labelText: 'Email'),
                             onChanged: (value) => _email = value,
@@ -281,15 +282,17 @@ class _AdminScreenState extends State<AdminScreen> {
                                 value!.isEmpty ? 'Please enter an email' : null,
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.number,
                             decoration:
                                 const InputDecoration(labelText: 'Password'),
-                            obscureText: true,
+                            obscureText: false,
                             onChanged: (value) => _password = value,
                             validator: (value) => value!.isEmpty
                                 ? 'Please enter a password'
                                 : null,
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.name,
                             decoration:
                                 const InputDecoration(labelText: 'Parent Name'),
                             onChanged: (value) => _parentName = value,
@@ -313,6 +316,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       child: Column(
                         children: [
                           TextFormField(
+                            keyboardType: TextInputType.name,
                             decoration: const InputDecoration(
                                 labelText: 'Student Name'),
                             onChanged: (value) => _studentName = value,
@@ -321,6 +325,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                 : null,
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                                 labelText: 'Remaining Classes'),
                             onChanged: (value) =>

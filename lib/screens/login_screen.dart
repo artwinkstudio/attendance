@@ -76,13 +76,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLoginForm() {
+    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    final bottomPadding = keyboardOpen ? 120.0 : 40.0; // Adjust bottom padding
     return Center(
       child: Padding(
         padding: EdgeInsets.only(
           top: 40.0,
           left: 40.0,
           right: 40.0,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 40,
+          bottom: bottomPadding,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
