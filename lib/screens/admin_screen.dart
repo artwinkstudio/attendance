@@ -137,22 +137,81 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
+    final List<TimeOfDay> predefinedTimes = [
+      TimeOfDay(hour: 10, minute: 0),
+      TimeOfDay(hour: 11, minute: 30),
+      TimeOfDay(hour: 14, minute: 0),
+      TimeOfDay(hour: 15, minute: 30),
+      TimeOfDay(hour: 17, minute: 0),
+    ];
+
+    await showDialog<void>(
       context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (pickedTime != null) {
-      setState(() {
-        _selectedDate = DateTime(
-          _selectedDate.year,
-          _selectedDate.month,
-          _selectedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Select Time'),
+          children: <Widget>[
+            ...predefinedTimes.map((time) => SimpleDialogOption(
+                  onPressed: () {
+                    setState(() {
+                      _selectedDate = DateTime(
+                        _selectedDate.year,
+                        _selectedDate.month,
+                        _selectedDate.day,
+                        time.hour,
+                        time.minute,
+                      );
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('${time.format(context)}'),
+                )),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog first
+                // Then call the standard TimePickerDialog
+                showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((pickedTime) {
+                  if (pickedTime != null) {
+                    setState(() {
+                      _selectedDate = DateTime(
+                        _selectedDate.year,
+                        _selectedDate.month,
+                        _selectedDate.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
+                      );
+                    });
+                  }
+                });
+              },
+              child: const Text('Pick a custom time'),
+            ),
+          ],
         );
-      });
-    }
+      },
+    );
   }
+
+  // Future<void> _selectTime(BuildContext context) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context,
+  //     initialTime: TimeOfDay.now(),
+  //   );
+  //   if (pickedTime != null) {
+  //     setState(() {
+  //       _selectedDate = DateTime(
+  //         _selectedDate.year,
+  //         _selectedDate.month,
+  //         _selectedDate.day,
+  //         pickedTime.hour,
+  //         pickedTime.minute,
+  //       );
+  //     });
+  //   }
+  // }
 
   Future<void> _addAttendance() async {
     if (_formKeyAttendance.currentState!.validate()) {
@@ -167,7 +226,7 @@ class _AdminScreenState extends State<AdminScreen> {
             _snackbarUtil.showSnackbar(
                 context, "Attendance recorded successfully");
             // Now, decrement the remaining classes for the student
-            if (_selectedStudentId != null) {
+            if (_selectedStudentId != null && _isPresent) {
               final DocumentReference studentRef = FirebaseFirestore.instance
                   .collection('students')
                   .doc(_selectedStudentId);
@@ -463,7 +522,9 @@ class _AdminScreenState extends State<AdminScreen> {
                             },
                             items: <String>[
                               'Traditional Art Class',
-                              'Digital Art Class'
+                              'Digital Art Class',
+                              'Make Up Class - Traditional',
+                              'Make Up Class - Digital Art Class'
                             ].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,

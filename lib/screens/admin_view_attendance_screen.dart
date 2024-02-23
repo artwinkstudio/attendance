@@ -77,13 +77,15 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
                         title: Text(attendanceData.className),
                         subtitle: Text(
                             "$parentName\n${DateFormat('yyyy-MM-dd h:mm a').format(attendanceData.attendanceDate)}"),
-                        leading: CircleAvatar(
+                        leading: Container(
                           child:
                               _buildStudentListTile([attendanceData.studentId]),
+                          width: 90,
                         ),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => _deleteAttendance(docId, attendanceData.studentId),
+                          onPressed: () => _deleteAttendance(
+                              docId, attendanceData.studentId),
                         ),
                       );
                     },
@@ -110,8 +112,12 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           final studentName = snapshot.data!.first.value.studentName;
           return Text(studentName,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 10));
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.teal,
+                fontWeight: FontWeight.w700,
+              ));
         } else {
           return const Text('No student found');
         }
@@ -163,7 +169,8 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
 
                 FirebaseUtils.deleteAttendance(docId).then((_) {
                   if (mounted) {
-                    FirebaseUtils.incrementRemainingClasses(studentId: studentID);
+                    FirebaseUtils.incrementRemainingClasses(
+                        studentId: studentID);
 
                     _snackbarUtil.showSnackbar(
                         context, 'Attendance deleted successfully');

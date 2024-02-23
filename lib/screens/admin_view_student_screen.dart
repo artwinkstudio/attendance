@@ -25,6 +25,8 @@ class _AdminViewStudentScreenState extends State<AdminViewStudentScreen> {
     final fetchedStudents = await FirebaseUtils.fetchStudents();
     setState(() {
       _students = fetchedStudents;
+      _students.sort((a, b) =>
+          a['data'].remainingClasses.compareTo(b['data'].remainingClasses));
     });
   }
 
@@ -43,8 +45,13 @@ class _AdminViewStudentScreenState extends State<AdminViewStudentScreen> {
           return ListTile(
             tileColor: kListTileColor,
             title: Text(student['data'].studentName),
-            subtitle:
-                Text('Remaining Classes: ${student['data'].remainingClasses}'),
+            subtitle: Text(
+              'Remaining Classes: ${student['data'].remainingClasses}',
+              style: TextStyle(
+                  color: student['data'].remainingClasses <= 1
+                      ? Colors.red
+                      : Colors.green),
+            ),
             onTap: () {
               Navigator.push(
                 context,

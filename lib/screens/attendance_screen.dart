@@ -32,7 +32,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           .get();
 
       for (var doc in querySnapshot.docs) {
-        attendanceRecords.add(AttendanceModel.fromJson(doc.data() as Map<String, dynamic>));
+        attendanceRecords
+            .add(AttendanceModel.fromJson(doc.data() as Map<String, dynamic>));
       }
     } catch (e) {
       debugPrint("Error fetching attendance records: $e");
@@ -55,7 +56,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return const Center(child: Text("Error fetching attendance records"));
+            return const Center(
+                child: Text("Error fetching attendance records"));
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return _buildAttendanceList(snapshot.data!);
           } else {
@@ -68,13 +70,15 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   Widget _buildAttendanceList(List<AttendanceModel> attendanceRecords) {
     // Sort the attendance records by date in descending order
-    attendanceRecords.sort((a, b) => b.attendanceDate.compareTo(a.attendanceDate));
+    attendanceRecords
+        .sort((a, b) => b.attendanceDate.compareTo(a.attendanceDate));
 
     return ListView.builder(
       itemCount: attendanceRecords.length,
       itemBuilder: (context, index) {
         AttendanceModel record = attendanceRecords[index];
-        String formattedDate = DateFormat('yyyy-MM-dd h:mm a').format(record.attendanceDate);
+        String formattedDate =
+            DateFormat('yyyy-MM-dd h:mm a').format(record.attendanceDate);
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -83,10 +87,24 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             child: ListTile(
               leading: CircleAvatar(
                 backgroundColor: kAppBarBackgroundColor,
-                child: Text('${attendanceRecords.length - index }', style: const TextStyle(color: Colors.black)),
+                child: Text('${attendanceRecords.length - index}',
+                    style: const TextStyle(color: Colors.black)),
               ),
               title: Text(record.className),
-              subtitle: Text('Date: $formattedDate - Present: ${record.attendance ? 'Yes' : 'No'}'),
+              subtitle: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                    TextSpan(text: 'Date: $formattedDate - '),
+                    TextSpan(
+                      text: record.attendance ? 'Present' : 'Absence (Please make up within one month)',
+                      style: TextStyle(
+                          color: record.attendance ? Colors.green : Colors.red,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         );
