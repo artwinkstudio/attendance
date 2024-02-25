@@ -10,6 +10,7 @@ class StudentModel {
     required this.remainingClasses,
   });
 
+
   Map<String, dynamic> toJson() => {
         'parentId': parentId,
         'studentName': studentName,

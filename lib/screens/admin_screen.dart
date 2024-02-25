@@ -1,5 +1,6 @@
 import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
+import 'package:attendance/models/students_model.dart';
 import 'package:attendance/screens/admin_view_attendance_screen.dart';
 import 'package:attendance/screens/admin_view_student_screen.dart';
 import 'package:attendance/screens/admin_view_user_screen.dart';
@@ -59,7 +60,9 @@ class _AdminScreenState extends State<AdminScreen> {
     final fetchedStudents = await FirebaseUtils.fetchStudents();
     setState(() {
       _parents = fetchedParents;
+      _parents.sort((a, b) => a['data'].parentName.compareTo(b['data'].parentName));
       _students = fetchedStudents;
+      _students.sort((a, b) => a['data'].studentName.compareTo(b['data'].studentName));
       _isLoading = false;
     });
   }
@@ -68,6 +71,8 @@ class _AdminScreenState extends State<AdminScreen> {
     final fetchedParents = await FirebaseUtils.fetchParents();
     setState(() {
       _parents = fetchedParents;
+      _parents.sort((a, b) => a['data'].parentName.compareTo(b['data'].parentName));
+
     });
   }
 
@@ -75,6 +80,8 @@ class _AdminScreenState extends State<AdminScreen> {
     final fetchedStudents = await FirebaseUtils.fetchStudents();
     setState(() {
       _students = fetchedStudents;
+      _students.sort((a, b) => a['data'].studentName.compareTo(b['data'].studentName));
+
     });
   }
 
@@ -576,15 +583,42 @@ class _AdminScreenState extends State<AdminScreen> {
                                 ? 'Please select a student'
                                 : null,
                           ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                                labelText: 'New Remaining Classes'),
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) =>
-                                _newRemainingClasses = int.tryParse(value) ?? 0,
-                            validator: (value) => value == null || value.isEmpty
-                                ? 'Please enter a valid number'
-                                : null,
+                          FutureBuilder<StudentModel?>(
+                            future: FirebaseUtils.fetchStudentByID(
+                                _selectedStudentIdForUpdate ??
+                                    '0'),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                // Display a loading indicator or a placeholder while waiting for the future to complete
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                // Handle error state
+                                return Text("Error fetching data");
+                              } else if (snapshot.hasData) {
+                                // Once the data is available, use it in the TextFormField
+                                final remainingClasses = snapshot.data
+                                    ?.remainingClasses; // Make sure this matches your data model
+                                return TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText:
+                                        'Remaining Classes: $remainingClasses. Please ender a new remaining classes', 
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (value) => _newRemainingClasses =
+                                      int.tryParse(value) ?? 0,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a valid number';
+                                    }
+                                    return null;
+                                  },
+                                );
+                              } else {
+                                // Handle the case where there is no data
+                                return Text("");
+                              }
+                            },
                           ),
                           ElevatedButton(
                             onPressed: () {

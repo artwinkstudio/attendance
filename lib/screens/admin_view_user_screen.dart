@@ -27,6 +27,12 @@ class _AdminViewUserScreenState extends State<AdminViewUserScreen> {
     final fetchedParents = await FirebaseUtils.fetchParents();
     setState(() {
       _parents = fetchedParents;
+
+      _parents.sort((a, b) {
+        final String aName = a['data'].parentName;
+        final String bName = b['data'].parentName;
+        return aName.compareTo(bName);
+      });
     });
   }
 

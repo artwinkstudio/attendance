@@ -26,7 +26,7 @@ class _AdminViewStudentScreenState extends State<AdminViewStudentScreen> {
     setState(() {
       _students = fetchedStudents;
       _students.sort((a, b) =>
-          a['data'].remainingClasses.compareTo(b['data'].remainingClasses));
+          a['data'].studentName.compareTo(b['data'].studentName));
     });
   }
 

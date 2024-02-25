@@ -183,8 +183,10 @@ class FirebaseUtils {
           .get();
 
       if (parentDoc.exists) {
-        UserModel parent = UserModel.fromJson(
-            {...parentDoc.data() as Map<String, dynamic>, 'id': parentDoc});
+        UserModel parent = UserModel.fromJson({
+          ...parentDoc.data() as Map<String, dynamic>,
+          'id': parentDoc,
+        });
 
         return parent;
       } else {
@@ -211,7 +213,7 @@ class FirebaseUtils {
 
         return student;
       } else {
-        print('students not exists');
+        // print('students not exists');
         return null;
       }
     } catch (e) {

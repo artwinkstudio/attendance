@@ -74,9 +74,32 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
                           parentSnapshot.data?.parentName ?? 'No Parent Found';
 
                       return ListTile(
-                        title: Text(attendanceData.className),
-                        subtitle: Text(
-                            "$parentName\n${DateFormat('yyyy-MM-dd h:mm a').format(attendanceData.attendanceDate)}"),
+                        title: Text(
+                          attendanceData.className,
+                          style: TextStyle(
+                              color: attendanceData.className ==
+                                      'Traditional Art Class'
+                                  ? Colors.blueAccent
+                                  : Colors.purpleAccent),
+                        ),
+                        subtitle: RichText(
+                            text: TextSpan(children: <TextSpan>[
+                          TextSpan(text: parentName),
+                          TextSpan(text: '\n'),
+                          TextSpan(
+                              text: DateFormat('yyyy-MM-dd h:mm a')
+                                  .format(attendanceData.attendanceDate)),
+                          TextSpan(text: '\n'),
+                          TextSpan(
+                              text: attendanceData.attendance
+                                  ? 'Present'
+                                  : 'Absence',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: attendanceData.attendance
+                                      ? Colors.green
+                                      : Colors.red)),
+                        ])),
                         leading: Container(
                           child:
                               _buildStudentListTile([attendanceData.studentId]),
@@ -85,7 +108,9 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () => _deleteAttendance(
-                              docId, attendanceData.studentId),
+                              docId,
+                              attendanceData.studentId,
+                              attendanceData.attendance),
                         ),
                       );
                     },
@@ -147,7 +172,7 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
   //   );
   // }
 
-  void _deleteAttendance(String docId, String studentID) {
+  void _deleteAttendance(String docId, String studentID, bool attendance) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -169,9 +194,10 @@ class _AdminViewAttendanceScreenState extends State<AdminViewAttendanceScreen> {
 
                 FirebaseUtils.deleteAttendance(docId).then((_) {
                   if (mounted) {
-                    FirebaseUtils.incrementRemainingClasses(
-                        studentId: studentID);
-
+                    if (attendance) {
+                      FirebaseUtils.incrementRemainingClasses(
+                          studentId: studentID);
+                    }
                     _snackbarUtil.showSnackbar(
                         context, 'Attendance deleted successfully');
                   }
