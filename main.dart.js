@@ -47277,7 +47277,7 @@ s=2
 return A.L(a.wn(0,n,t.X),$async$$1)
 case 2:m=c
 if(m.gnW()){p=m.bw(0,"remainingClasses")
-if(p>0){o=A.av(["remainingClasses",p-1],t.N,t.z)
+if(p>=-3){o=A.av(["remainingClasses",p-1],t.N,t.z)
 n=B.b.aT(n.a.b.a,"/")
 o=A.aAg(o)
 o.toString
