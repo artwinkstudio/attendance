@@ -243,7 +243,7 @@ class _AdminScreenState extends State<AdminScreen> {
                 if (studentSnapshot.exists) {
                   int currentRemainingClasses =
                       studentSnapshot.get('remainingClasses');
-                  if (currentRemainingClasses > 0) {
+                  if (currentRemainingClasses >= -3) {
                     transaction.update(studentRef,
                         {'remainingClasses': currentRemainingClasses - 1});
                   }
