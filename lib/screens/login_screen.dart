@@ -76,23 +76,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLoginForm() {
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-    final bottomPadding = keyboardOpen ? 120.0 : 40.0; // Adjust bottom padding
     return Center(
       child: Padding(
         padding: EdgeInsets.only(
           top: 40.0,
           left: 40.0,
           right: 40.0,
-          bottom: bottomPadding,
+          bottom: 40.0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // SizedBox(
-            //   height: (MediaQuery.of(context).size.height) / 5,
-            // ),
             const SizedBox(height: 20),
             logoImage,
             const SizedBox(height: 20),
@@ -102,9 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 20),
             _buildLoginButton(),
             const SizedBox(height: 20),
-            // SizedBox(
-            //   height: (MediaQuery.of(context).size.height) / 5,
-            // ),
           ],
         ),
       ),
@@ -116,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextField(
       controller: controller,
       keyboardType:
-          obscureText ? TextInputType.text : TextInputType.emailAddress,
+          obscureText ? TextInputType.number : TextInputType.emailAddress,
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
@@ -132,12 +124,4 @@ class _LoginScreenState extends State<LoginScreen> {
       child: const Text('Login', style: kbuttonTextStyle),
     );
   }
-
-//   Widget _buildAdminButton() {
-//     return TextButton(
-//       onPressed: () => Navigator.pushNamed(context, AdminScreen.id),
-//       style: kbuttonStyleAbmin,
-//       child: const Text('Admin', style: kbuttonTextStyle),
-//     );
-//   }
 }

@@ -28,7 +28,6 @@ class Attendance extends StatelessWidget {
       routes: {
         LoginScreen.id: (context) => const LoginScreen(),
         SelectionScreen.id: (context) => const SelectionScreen(),
-        // AttendanceScreen.id: (context) => const AttendanceScreen(),
         AdminScreen.id: (context) => const AdminScreen(),
         AdminViewUserScreen.id: (context) => const AdminViewUserScreen(),
         AdminViewStudentScreen.id: (context) => const AdminViewStudentScreen(),
