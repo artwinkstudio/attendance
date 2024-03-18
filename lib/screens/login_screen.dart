@@ -5,6 +5,7 @@ import 'package:attendance/screens/selection_screen.dart';
 import 'package:attendance/utils/snackbar_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:attendance/utils/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,51 +18,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _snackbarUtil = SnackbarUtil();
+  final LoginController _loginController =
+      LoginController(FirebaseAuth.instance, SnackbarUtil());
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loginUser() async {
-    final emailAddress = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    if (emailAddress.isEmpty || password.isEmpty) {
-      _snackbarUtil.showSnackbar(context, 'Email or password cannot be empty.');
-      return;
-    }
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
-      if (!mounted) return;
-      if (emailAddress == 'artwinkstudio@gmail.com') {
-        Navigator.pushReplacementNamed(context, AdminScreen.id);
-      } else {
-        Navigator.pushReplacementNamed(context, SelectionScreen.id);
-      }
-    } on FirebaseAuthException catch (e) {
-      _handleFirebaseAuthException(e);
-    }
-  }
-
-  void _handleFirebaseAuthException(FirebaseAuthException e) {
-    String errorMessage = 'An error occurred. Please try again.';
-    switch (e.code) {
-      case 'user-not-found':
-        errorMessage = 'No user found for that email.';
-        break;
-      case 'wrong-password':
-        errorMessage = 'Wrong password provided for that user.';
-        break;
-    }
-    _snackbarUtil.showSnackbar(context, errorMessage);
   }
 
   @override
@@ -119,7 +83,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginButton() {
     return TextButton(
-      onPressed: _loginUser,
+      onPressed: () {
+        _loginController.loginUser(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          context: context,
+          onAdminLogin: () =>
+              Navigator.pushReplacementNamed(context, AdminScreen.id),
+          onUserLogin: () =>
+              Navigator.pushReplacementNamed(context, SelectionScreen.id),
+        );
+      },
       style: kbuttonStyle,
       child: const Text('Login', style: kbuttonTextStyle),
     );
