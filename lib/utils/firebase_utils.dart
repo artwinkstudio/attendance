@@ -222,6 +222,28 @@ class FirebaseUtils {
     }
   }
 
+  static Future<List<AttendanceModel>> fetchAttendanceRecords(parentId, studentId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<AttendanceModel> attendanceRecords = [];
+
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('attendance')
+          .where('parentId', isEqualTo: parentId)
+          .where('studentId', isEqualTo: studentId)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        attendanceRecords
+            .add(AttendanceModel.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    } catch (e) {
+      print("Error fetching attendance records: $e");
+    }
+
+    return attendanceRecords;
+  }
+
   static Future<void> incrementRemainingClasses({
     required String studentId,
   }) async {

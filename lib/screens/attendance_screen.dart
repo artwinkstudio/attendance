@@ -1,6 +1,6 @@
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/models/attendance_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:attendance/utils/firebase_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,28 +20,6 @@ class AttendanceScreen extends StatefulWidget {
 }
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
-  Future<List<AttendanceModel>> _fetchAttendanceRecords() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    List<AttendanceModel> attendanceRecords = [];
-
-    try {
-      QuerySnapshot querySnapshot = await firestore
-          .collection('attendance')
-          .where('parentId', isEqualTo: widget.parentId)
-          .where('studentId', isEqualTo: widget.studentId)
-          .get();
-
-      for (var doc in querySnapshot.docs) {
-        attendanceRecords
-            .add(AttendanceModel.fromJson(doc.data() as Map<String, dynamic>));
-      }
-    } catch (e) {
-      debugPrint("Error fetching attendance records: $e");
-    }
-
-    return attendanceRecords;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +29,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       ),
       backgroundColor: kBackgroundColor,
       body: FutureBuilder<List<AttendanceModel>>(
-        future: _fetchAttendanceRecords(),
+        future: FirebaseUtils.fetchAttendanceRecords(widget.parentId, widget.studentId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
