@@ -1,8 +1,7 @@
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/models/users_model.dart';
-import 'package:attendance/models/students_model.dart'; // Corrected typo in the filename
+import 'package:attendance/models/students_model.dart'; 
 import 'package:attendance/screens/attendance_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:attendance/utils/firebase_utils.dart';
@@ -17,24 +16,6 @@ class SelectionScreen extends StatefulWidget {
 
 class _SelectionScreenState extends State<SelectionScreen> {
   final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
-
-  Future<UserModel?> _fetchCurrentUser(String currentUserUid) async {
-    try {
-      var userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUserUid)
-          .get();
-
-      if (userDoc.exists) {
-        return UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
-      }
-      debugPrint("No user found with uid: $currentUserUid");
-      return null;
-    } catch (e) {
-      debugPrint("Error fetching user: $e");
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +40,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   Widget _buildCurrentUserHeader() {
     return FutureBuilder<UserModel?>(
-      future: _fetchCurrentUser(currentUserUid),
+      future: FirebaseUtils.fetchParentByID(currentUserUid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -87,7 +68,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget _buildStudentsList() {
     return Expanded(
       child: FutureBuilder<List<MapEntry<String, StudentModel>>>(
-        future: _fetchCurrentUser(currentUserUid)
+        future: FirebaseUtils.fetchParentByID(currentUserUid)
             .then((user) => FirebaseUtils.fetchStudentsbyID(user!.studentIDs)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
