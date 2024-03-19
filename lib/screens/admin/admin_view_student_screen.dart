@@ -1,7 +1,8 @@
 import 'package:attendance/components/styles.dart';
+import 'package:attendance/screens/attendance_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:attendance/utils/firebase_utils.dart';
-import 'attendance_screen.dart'; // Import your AttendanceScreen here
+
 
 class AdminViewStudentScreen extends StatefulWidget {
   const AdminViewStudentScreen({super.key});

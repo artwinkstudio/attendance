@@ -1,9 +1,9 @@
 import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/models/students_model.dart';
-import 'package:attendance/screens/admin_view_attendance_screen.dart';
-import 'package:attendance/screens/admin_view_student_screen.dart';
-import 'package:attendance/screens/admin_view_user_screen.dart';
+import 'package:attendance/screens/admin/admin_view_attendance_screen.dart';
+import 'package:attendance/screens/admin/admin_view_student_screen.dart';
+import 'package:attendance/screens/admin/admin_view_user_screen.dart';
 import 'package:attendance/utils/snackbar_utils.dart';
 import 'package:attendance/utils/firebase_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

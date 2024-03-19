@@ -1,8 +1,8 @@
 import 'package:attendance/firebase_options.dart';
-import 'package:attendance/screens/admin_screen.dart';
-import 'package:attendance/screens/admin_view_attendance_screen.dart';
-import 'package:attendance/screens/admin_view_student_screen.dart';
-import 'package:attendance/screens/admin_view_user_screen.dart';
+import 'package:attendance/screens/admin/admin_screen.dart';
+import 'package:attendance/screens/admin/admin_view_attendance_screen.dart';
+import 'package:attendance/screens/admin/admin_view_student_screen.dart';
+import 'package:attendance/screens/admin/admin_view_user_screen.dart';
 import 'package:attendance/screens/attendance_screen.dart';
 import 'package:attendance/screens/login_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
