@@ -29,8 +29,8 @@ const RESOURCES = {"ms-icon-144x144.png": "3a8c5adc641c9d3e6ec7b5bfc4336036",
 "assets/AssetManifest.bin.json": "78a67e21c2735dfcdc7522f1094e696f",
 "apple-icon.png": "9f97c3822dd2eba50df9f238271c0348",
 "ms-icon-150x150.png": "42682cc20178abff2480cb67d1ac3c6f",
-"index.html": "20f0b6e49557db27240b1d815ecf0acf",
-"/": "20f0b6e49557db27240b1d815ecf0acf",
+"index.html": "b980f167a3b4acbb09681208f57b2d9e",
+"/": "b980f167a3b4acbb09681208f57b2d9e",
 "manifest.json": "b58fcfa7628c9205cb11a1b2c3e8f99a",
 "canvaskit/canvaskit.js": "66177750aff65a66cb07bb44b8c6422b",
 "canvaskit/canvaskit.js.symbols": "48c83a2ce573d9692e8d970e288d75f7",
@@ -55,7 +55,7 @@ const RESOURCES = {"ms-icon-144x144.png": "3a8c5adc641c9d3e6ec7b5bfc4336036",
 "ms-icon-70x70.png": "c15d068aad71babb1d957f50ec3e9eb5",
 "favicon-96x96.png": "30f6cbc2c24ee4f81332617f266f7388",
 "version.json": "daddb57faee272b6414f39afea3e53dc",
-"flutter_bootstrap.js": "f31d91f5209db1488cc4f9a4a4fe00fe"};
+"flutter_bootstrap.js": "749246d6f9359526d07b3b0ccf34ba74"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
