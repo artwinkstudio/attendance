@@ -24,7 +24,8 @@ class AttendanceModel {
         'className': className,
       };
 
-  factory AttendanceModel.fromJson(Map<String, dynamic> json) => AttendanceModel(
+  factory AttendanceModel.fromJson(Map<String, dynamic> json) =>
+      AttendanceModel(
         parentId: json['parentId'],
         studentId: json['studentId'],
         attendance: json['attendance'],
