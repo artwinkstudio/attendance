@@ -3,7 +3,7 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - master # Trigger the workflow when pushing to the master branch
+      - master # Trigger on the master branch
 
 jobs:
   build:
@@ -14,11 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Set up Flutter environment
+      # Set up Flutter environment with a specific version
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "stable"
+          flutter-version: "3.23.4" # Replace with a specific version
 
       # Build the Flutter web app
       - name: Build Flutter Web
