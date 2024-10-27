@@ -22,7 +22,7 @@ jobs:
 
       # Build the Flutter web app
       - name: Build Flutter Web
-        run: flutter build web --web-renderer html
+        run: flutter build web
 
       # Deploy to gh-pages branch
       - name: Deploy to GitHub Pages
