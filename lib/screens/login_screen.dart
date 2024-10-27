@@ -64,31 +64,35 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLoginForm() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(height: 20),
-        logoImage,
-        const SizedBox(height: 20),
-        _buildTextField(
-          controller: _emailController,
-          focusNode: _emailFocusNode,
-          label: 'Email',
-          obscureText: false,
-          keyboardType: TextInputType.emailAddress,
-        ),
-        const SizedBox(height: 20),
-        _buildTextField(
-          controller: _passwordController,
-          focusNode: _passwordFocusNode,
-          label: 'Password',
-          obscureText: true,
-          keyboardType: TextInputType.text,
-        ),
-        const SizedBox(height: 20),
-        _buildLoginButton(),
-        const SizedBox(height: 20),
-      ],
+    return AutofillGroup(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 20),
+          logoImage,
+          const SizedBox(height: 20),
+          _buildTextField(
+            controller: _emailController,
+            focusNode: _emailFocusNode,
+            label: 'Email',
+            obscureText: false,
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: [AutofillHints.username, AutofillHints.email],
+          ),
+          const SizedBox(height: 20),
+          _buildTextField(
+            controller: _passwordController,
+            focusNode: _passwordFocusNode,
+            label: 'Password',
+            obscureText: true,
+            keyboardType: TextInputType.text,
+            autofillHints: [AutofillHints.password],
+          ),
+          const SizedBox(height: 20),
+          _buildLoginButton(),
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
 
@@ -98,12 +102,14 @@ class _LoginScreenState extends State<LoginScreen> {
     required String label,
     required bool obscureText,
     required TextInputType keyboardType,
+    required List<String> autofillHints,
   }) {
     return TextField(
       controller: controller,
       focusNode: focusNode,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      autofillHints: autofillHints,
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
