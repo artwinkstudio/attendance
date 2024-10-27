@@ -1,14 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:attendance/components/assets.dart';
 import 'package:attendance/components/styles.dart';
 import 'package:attendance/screens/admin/admin_screen.dart';
 import 'package:attendance/screens/selection_screen.dart';
 import 'package:attendance/utils/snackbar_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:attendance/utils/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
   static const String id = '/';
 
   @override
@@ -16,15 +16,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  // Controllers for text fields
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // FocusNodes for managing focus
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
+  // Login controller
   final LoginController _loginController =
       LoginController(FirebaseAuth.instance, SnackbarUtil());
 
   @override
+  void initState() {
+    super.initState();
+    // Optionally request focus on the email field when the widget is built
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _emailFocusNode.requestFocus();
+    // });
+  }
+
+  @override
   void dispose() {
+    // Dispose controllers and focus nodes
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -32,47 +51,58 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: _buildLoginForm(),
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: _buildLoginForm(),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildLoginForm() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: 40.0,
-          left: 40.0,
-          right: 40.0,
-          bottom: 40.0,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 20),
+        logoImage,
+        const SizedBox(height: 20),
+        _buildTextField(
+          controller: _emailController,
+          focusNode: _emailFocusNode,
+          label: 'Email',
+          obscureText: false,
+          keyboardType: TextInputType.emailAddress,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            logoImage,
-            const SizedBox(height: 20),
-            _buildTextField(_emailController, 'Email', false),
-            const SizedBox(height: 20),
-            _buildTextField(_passwordController, 'Password', true),
-            const SizedBox(height: 20),
-            _buildLoginButton(),
-            const SizedBox(height: 20),
-          ],
+        const SizedBox(height: 20),
+        _buildTextField(
+          controller: _passwordController,
+          focusNode: _passwordFocusNode,
+          label: 'Password',
+          obscureText: true,
+          keyboardType: TextInputType.text,
         ),
-      ),
+        const SizedBox(height: 20),
+        _buildLoginButton(),
+        const SizedBox(height: 20),
+      ],
     );
   }
 
-  TextField _buildTextField(
-      TextEditingController controller, String label, bool obscureText) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required FocusNode focusNode,
+    required String label,
+    required bool obscureText,
+    required TextInputType keyboardType,
+  }) {
     return TextField(
       controller: controller,
-      keyboardType:
-          obscureText ? TextInputType.number : TextInputType.emailAddress,
+      focusNode: focusNode,
+      keyboardType: keyboardType,
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
