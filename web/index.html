@@ -25,17 +25,14 @@
     />
 
     <!-- iOS meta tags & icons -->
+    <meta name="theme-color" content="#F5F5ED" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="attendance" />
     <meta name="format-detection" content="telephone=no" />
 
-    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
-
     <!-- Favicon -->
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
     <link rel="icon" type="image/png" href="favicon.png" />
 
     <title>ArtWinkStudio - Attendance</title>
@@ -47,37 +44,19 @@
     </script>
 
     <!-- This script adds the flutter initialization JS code -->
-    <script src="flutter_bootstrap.js" defer></script>
+    <script src="flutter_bootstrap.js" async></script>
   </head>
   <body>
     <!-- Replace the entire script block with the following -->
     <!-- Replace the entire script block with the following -->
     <body>
-      <!-- Register the service worker -->
+      <!-- Initialize the Flutter app -->
       <script>
         if ("serviceWorker" in navigator) {
           window.addEventListener("flutter-first-frame", function () {
             navigator.serviceWorker.register("flutter_service_worker.js");
           });
         }
-      </script>
-
-      <!-- Initialize the Flutter app -->
-      <script>
-        window.addEventListener("load", function (ev) {
-          _flutter.loader
-            .load({
-              serviceWorker: {
-                serviceWorkerVersion: serviceWorkerVersion,
-              },
-            })
-            .then(function (engineInitializer) {
-              return engineInitializer.initializeEngine();
-            })
-            .then(function (appRunner) {
-              return appRunner.runApp();
-            });
-        });
       </script>
     </body>
   </body>

@@ -108,7 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
         labelText: label,
         border: const OutlineInputBorder(),
       ),
-      autofocus: true,
     );
   }
 
