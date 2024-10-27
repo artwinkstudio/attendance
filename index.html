@@ -21,56 +21,43 @@
     <meta name="description" content="A new Flutter project." />
 
     <!-- iOS meta tags & icons -->
+    <meta name="theme-color" content="#F5F5ED" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="attendance" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
 
-    <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png" />
-    <link
-      rel="apple-touch-icon"
-      sizes="114x114"
-      href="apple-icon-114x114.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="120x120"
-      href="apple-icon-120x120.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="144x144"
-      href="apple-icon-144x144.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="152x152"
-      href="apple-icon-152x152.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="apple-icon-180x180.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="android-icon-192x192.png"
-    />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>ArtWinkStudio - Attendance</title>
     <link rel="manifest" href="manifest.json" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-TileImage" content="ms-icon-144x144.png" />
-    <meta name="theme-color" content="#ffffff" />
 
-    <title>attendance</title>
+    <script>
+      // The value below is injected by flutter build, do not touch.
+      const serviceWorkerVersion = "1460104162";
+    </script>
+    <!-- This script adds the flutter initialization JS code -->
+    <script src="flutter_bootstrap.js" defer></script>
   </head>
   <body>
-    <script src="flutter_bootstrap.js" async></script>
+    <!-- Replace the entire script block with the following -->
+    <script>
+      window.addEventListener("load", function (ev) {
+        // Initialize the Flutter engine and run the app
+        _flutter.loader
+          .load({
+            serviceWorker: {
+              serviceWorkerVersion: serviceWorkerVersion,
+            },
+          })
+          .then(function (engineInitializer) {
+            return engineInitializer.initializeEngine();
+          })
+          .then(function (appRunner) {
+            return appRunner.runApp();
+          });
+      });
+    </script>
   </body>
 </html>
