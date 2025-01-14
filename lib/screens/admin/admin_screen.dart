@@ -485,7 +485,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                     context: context,
                                     initialDate: _selectedDate,
                                     firstDate: DateTime(2000),
-                                    lastDate: DateTime(2025),
+                                    lastDate: DateTime(2026),
                                   );
                                   if (picked != null &&
                                       picked != _selectedDate) {
